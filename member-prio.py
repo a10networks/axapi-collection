@@ -28,6 +28,7 @@ parser = argparse.ArgumentParser(description="Script to change a member priority
 parser.add_argument("-d", "--device", required=True, help="A10 device IP address")
 parser.add_argument("-l", "--login", default='admin', help="A10 admin (default: admin)")
 parser.add_argument("-p", "--password", required=True, help="A10 password")
+#
 parser.add_argument("-s", "--service-group", required=True, help="Select the service-group")
 parser.add_argument("-m", "--member", required=True, help="Select the member")
 parser.add_argument("--priority", default='8', help="Set the member prioriry (default: 8)")
