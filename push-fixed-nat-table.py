@@ -32,6 +32,7 @@ parser.add_argument("-p", "--password", required=True, help="A10 password")
 parser.add_argument("--ftp-server", required=True, help="Set the FTP server")
 parser.add_argument("--ftp-account", required=True, help="Set the FTP account")
 parser.add_argument("--ftp-password", required=True, help="Set the FTP password")
+parser.add_argument("--ftp-folder", default='/', help="Set the FTP directory to upload to (default: /)")
 parser.add_argument("--table", required=True, help="The Fixed-NAT table to push")
 
 print "DEBUG ==> " + str(parser.parse_args()) + "\n"
@@ -44,6 +45,7 @@ try:
     ftp_server = args.ftp_server
     ftp_upload_account = args.ftp_account
     ftp_upload_pwd = args.ftp_password
+    ftp_upload_folder = args.ftp_folder
     fixed_nat_table = args.table
 except IOError, msg:
     parser.error(str(msg))
@@ -62,7 +64,7 @@ try:
     axapi_base_url = 'https://' + a10_host + '/services/rest/V2.8/?format=json'
     session_url = axapi_authenticate(axapi_base_url, a10_admin, a10_pwd)
 
-    response = axapi_call(session_url + '&method=cli.deploy', 'export fixed-nat ' + fixed_nat_table + ' ftp://' + ftp_upload_account + ':' + ftp_upload_pwd + '@' + ftp_server + '/ax/' + fixed_nat_table)
+    response = axapi_call(session_url + '&method=cli.deploy', 'export fixed-nat ' + fixed_nat_table + ' ftp://' + ftp_upload_account + ':' + ftp_upload_pwd + '@' + ftp_server + ftp_upload_folder + fixed_nat_table)
 
     closed = axapi_call(session_url + '&method=session.close')
 except Exception, e:
