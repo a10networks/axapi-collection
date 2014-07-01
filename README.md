@@ -1,5 +1,5 @@
 # A10 Networks
-Here you can find a collection A10 Networks related files / scripts.
+Here you can find a collection of A10 Networks related files / scripts.
 
 ## Ansible Modules
 * a10_server  -- Ansible module for “slb server”
