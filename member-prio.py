@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#################################################
+#
+# menber-prio.py
+#  (c) A10 Networks -- MP
+#   v1 20140701
+#
+#################################################
+#
+# aXAPI script
+# Change the member priority in a service-group
+# to gracefully shutdown a member.
+#
+# Requiers:
+#   - Python 2.7.x
+#   - aXAPI V2.1
+#
+# Questions & comments welcome.
+#  mpeters AT a10networks DOT com
+#
+#################################################
 
 import json
 import urllib2
