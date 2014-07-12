@@ -29,7 +29,7 @@ import argparse
 #################################################
 # Set specific defaults
 #################################################
-FTP = '46.23.80.30'
+FTP = '<FTP Server IP>'
 ACOS = '<Default ACOS Build>'
 
 tftp_lab1 = "tftp://172.31.81.10/sx"
