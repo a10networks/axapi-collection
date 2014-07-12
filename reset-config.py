@@ -5,6 +5,7 @@
 #  (c) A10 Networks -- MP
 #   v1 20140710
 #   v2 20140711 - added upgrade
+#   v3 20140412 - moved to aXAPI V2.1
 #
 #################################################
 #
@@ -13,8 +14,8 @@
 #
 # Requiers:
 #   - Python 2.7.x
-#   - aXAPI V2
-#   - ACOS 2.7.0-Px
+#   - aXAPI V2.1
+#   - ACOS 2.7.1-Px or higher
 #
 # Questions & comments welcome.
 #  mpeters AT a10networks DOT com
@@ -24,17 +25,17 @@
 import json
 import urllib2
 import argparse
-import xml.etree.ElementTree as xml
 
 #################################################
 # Set specific defaults
 #################################################
-FTP = '<IP of FTP Server>'
+FTP = '46.23.80.30'
 ACOS = '<Default ACOS Build>'
 
-tftp_lab1 = "restore tftp://172.31.81.10/sx"
-devices_lab1 = {'172.31.81.11': '1', '172.31.81.21': '2', '172.31.81.31': '3', '172.31.81.41': '4', '172.31.81.51': '5', '172.31.81.61': '6', '172.31.81.71': '7', '172.31.81.81': '8', '172.31.81.91': '9', '172.31.81.91': '9', '172.31.81.101': '10', '172.31.81.111': '11', '172.31.81.121': '12'}
-tftp_lab2 = "restore tftp://172.31.82.10/sx"
+tftp_lab1 = "tftp://172.31.81.10/sx"
+#devices_lab1 = {'172.31.81.11': '1', '172.31.81.21': '2', '172.31.81.31': '3', '172.31.81.41': '4', '172.31.81.51': '5', '172.31.81.61': '6', '172.31.81.71': '7', '172.31.81.81': '8', '172.31.81.91': '9', '172.31.81.91': '9', '172.31.81.101': '10', '172.31.81.111': '11', '172.31.81.121': '12'}
+devices_lab1 = {'46.23.81.11': '1'}
+tftp_lab2 = "tftp://172.31.82.10/sx"
 devices_lab2 = {'172.31.82.11': '1', '172.31.82.21': '2', '172.31.82.31': '3', '172.31.82.41': '4', '172.31.82.51': '5', '172.31.82.61': '6', '172.31.82.71': '7', '172.31.82.81': '8', '172.31.82.91': '9', '172.31.82.91': '9', '172.31.82.101': '10', '172.31.82.111': '11', '172.31.82.121': '12'}
 #################################################
 
@@ -43,7 +44,7 @@ parser.add_argument("-d", "--device", required=True, choices=['lab1', 'lab2'], h
 parser.add_argument("-l", "--login", default='admin', help="A10 admin (default: admin)")
 parser.add_argument("-p", "--password", required=True, help="A10 password")
 #
-parser.add_argument("-a", "--action", required=True, choices=['restore', 'reboot', 'clear-log', 'upgrade'], help="Action to perform")
+parser.add_argument("-a", "--action", required=True, choices=['restore', 'backup', 'reboot', 'clear-log', 'upgrade'], help="Action to perform")
 parser.add_argument("--partition", default='primary', help="Boot Partition to use (default: primary)")
 parser.add_argument("--file", default=ACOS, help="ACOS Version (default: " + ACOS + ")")
 parser.add_argument("--ftpserver", default=FTP, help="FTP Server (default: " + FTP + ")")
@@ -71,7 +72,7 @@ def axapi_call(url, data=None):
     return result
 
 def axapi_authenticate(base_url, user, pwd):
-    url = base_url + "&format=json&method=authenticate&username=" + user + "&password=" + pwd
+    url = base_url + "&method=authenticate&username=" + user + "&password=" + pwd
     sessid = json.loads(axapi_call(url))['session_id']
     result = base_url + '&session_id=' + sessid
     return result
@@ -94,31 +95,34 @@ try:
 
         print "===> Start for host: " + a10_host
 
-        axapi_base_url = 'https://' + a10_host + '/services/rest/V2/?'
+        axapi_base_url = 'https://' + a10_host + '/services/rest/V2.1/?format=json'
         session_url = axapi_authenticate(axapi_base_url, a10_admin, a10_pwd)
 
         if action == 'restore':
             print "===> Restore Config"
-            response = axapi_call(session_url + '&method=cli.deploy', tftp + tftp_file)
-            print response
+            response = axapi_call(session_url + '&method=cli.deploy', 'restore ' + tftp + tftp_file)
+            print "<=== Status: " + str(json.loads(response)['response']['status'])
+
+        if action == 'backup':
+            print "===> Backup Config"
+            response = axapi_call(session_url + '&method=cli.deploy', 'backup system ' + tftp + tftp_file)
+            print "<=== Status: " + str(json.loads(response)['response']['status'])
 
         if action == 'reboot':
             print "===> Reboot Instance"
-            response = axapi_call(session_url + '&format=xml&method=system.action.reboot&write_memory=1')
-            xmltojson = xml.fromstring(response)
-            print "<=== Status: " + xmltojson.attrib['status']
+            response = axapi_call(session_url + '&method=system.action.reboot&write_memory=1')
+            print "<=== Status: " + str(json.loads(response)['response']['status'])
 
         if action == 'clear-log':
             print "===> Clear Log"
-            response = axapi_call(session_url + '&format=xml&method=system.log.clear')
-            xmltojson = xml.fromstring(response)
-            print "<=== Status: " + xmltojson.attrib['status']
+            response = axapi_call(session_url + '&method=system.log.clear')
+            print "<=== Status: " + str(json.loads(response)['response']['status'])
 
         if action == 'upgrade':
             print "===> Upgrade"
-            response = axapi_call(session_url + '&format=xml&method=system.maintain.upgrade&media=0&destination=' + destination + '&reboot=0&protocol=ftp&host=' + ftp_host + '&location=' + ftp_file + '&username=' + ftp_user + '&password=' + ftp_pass)
-            xmltojson = xml.fromstring(response)
-            print "<=== Status: " + xmltojson.attrib['status']
+            json_post = {'sys_maintain': { 'media': '0', 'destination': destination, 'reboot': '0', 'remote': { 'protocol': '1', 'host': ftp_host, 'location': ftp_file, 'username': ftp_user, 'password': ftp_pass }}}
+            response = axapi_call(session_url + '&method=system.maintain.upgrade', json.dumps(json_post))
+            print "<=== Status: " + str(json.loads(response)['response']['status'])
 
         closed = axapi_call(session_url + '&method=session.close')
 except Exception, e:
