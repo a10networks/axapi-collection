@@ -5,7 +5,8 @@
 #  (c) A10 Networks -- MP
 #   v1 20140710
 #   v2 20140711 - added upgrade
-#   v3 20140412 - moved to aXAPI V2.1
+#   v3 20140712 - moved to aXAPI V2.1
+#   v4 20140713 - moved result to function
 #
 #################################################
 #
@@ -29,7 +30,7 @@ import argparse
 #################################################
 # Set specific defaults
 #################################################
-FTP = '<FTP Server>'
+FTP = '<FTP Server IP>'
 ACOS = '<Default ACOS Build>'
 
 tftp_lab1 = "tftp://172.31.81.10/sx"
@@ -76,6 +77,13 @@ def axapi_authenticate(base_url, user, pwd):
     result = base_url + '&session_id=' + sessid
     return result
 
+def axapi_result(result):
+    status = str(json.loads(response)['response']['status'])
+    if status == 'fail':
+        return result
+    else:
+        return status
+
 try:
     if a10_host == 'lab1':
         devices = devices_lab1.items()
@@ -100,28 +108,28 @@ try:
         if action == 'restore':
             print "===> Restore Config"
             response = axapi_call(session_url + '&method=cli.deploy', 'restore ' + tftp + tftp_file)
-            print "<=== Status: " + str(json.loads(response)['response']['status'])
+            print "<=== Status: " + axapi_result(response)
 
         if action == 'backup':
             print "===> Backup Config"
             response = axapi_call(session_url + '&method=cli.deploy', 'backup system ' + tftp + tftp_file)
-            print "<=== Status: " + str(json.loads(response)['response']['status'])
+            print "<=== Status: " + axapi_result(response)
 
         if action == 'reboot':
             print "===> Reboot Instance"
             response = axapi_call(session_url + '&method=system.action.reboot&write_memory=1')
-            print "<=== Status: " + str(json.loads(response)['response']['status'])
+            print "<=== Status: " + axapi_result(response)
 
         if action == 'clear-log':
             print "===> Clear Log"
             response = axapi_call(session_url + '&method=system.log.clear')
-            print "<=== Status: " + str(json.loads(response)['response']['status'])
+            print "<=== Status: " + axapi_result(response)
 
         if action == 'upgrade':
             print "===> Upgrade"
             json_post = {'sys_maintain': { 'media': '0', 'destination': destination, 'reboot': '0', 'remote': { 'protocol': '1', 'host': ftp_host, 'location': ftp_file, 'username': ftp_user, 'password': ftp_pass }}}
             response = axapi_call(session_url + '&method=system.maintain.upgrade', json.dumps(json_post))
-            print "<=== Status: " + str(json.loads(response)['response']['status'])
+            print "<=== Status: " + axapi_result(response)
 
         closed = axapi_call(session_url + '&method=session.close')
 except Exception, e:
