@@ -1,6 +1,8 @@
 # A10 Networks
 Here you can find a collection of A10 Networks related files / scripts.
 
+For a python API client, please look here: https://github.com/a10networks/acos-client
+
 ## Ansible Modules
 * a10_server  -- Ansible module for “slb server”
 * a10_service_group -- Ansible module for “slb service-group”
