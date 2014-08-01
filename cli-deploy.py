@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-#################################################
 #
-# cli-deploy.py
-#  (c) A10 Networks -- MP
-#   v1 20140713
+# Copyright 2014, Mischa Peters <mpeters AT a10networks DOT com>, A10 Networks.
+# Version 1.0 - 20140713
 #
-#################################################
-#
-# aXAPI script
 # Quick cli.deploy
 #
 # Requiers:
@@ -15,10 +10,6 @@
 #   - aXAPI V2.1
 #   - ACOS 2.7.1-Px or higher
 #
-# Questions & comments welcome.
-#  mpeters AT a10networks DOT com
-#
-#################################################
 
 import json
 import urllib2

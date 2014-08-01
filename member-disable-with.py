@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-#################################################
 #
-# menber-disable-with.py
-#  (c) A10 Networks -- MP
-#   v1 20140701
+# Copyright 2014, Mischa Peters <mpeters AT a10networks DOT com>, A10 Networks.
+# Version 1.0 - 20140701
 #
-#################################################
-#
-# aXAPI script
 # Change status of a member with "disable-with-health-check"
 # in 2.7.2-P2 to gracefully shutdown a member.
 #
@@ -16,10 +11,6 @@
 #   - aXAPI V2.1
 #   - ACOS 2.7.2-P2
 #
-# Questions & comments welcome.
-#  mpeters AT a10networks DOT com
-#
-#################################################
 
 import json
 import urllib2

@@ -1,13 +1,8 @@
 #!/usr/bin/env python
-#################################################
 #
-# push-fixed-nat-table.py
-#  (c) A10 Networks -- MP
-#   v1 20140701
+# Copyright 2014, Mischa Peters <mpeters AT a10networks DOT com>, A10 Networks.
+# Version 1.0 - 20140701
 #
-#################################################
-#
-# aXAPI script
 # Push the Fixed-NAT table from ACOS 2.8.x to an FTP
 # server.
 #
@@ -15,10 +10,6 @@
 #   - Python 2.7.x
 #   - aXAPI V2.8
 #
-# Questions & comments welcome.
-#  mpeters AT a10networks DOT com
-#
-#################################################
 
 import json
 import urllib2
