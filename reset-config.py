@@ -1,16 +1,11 @@
 #!/usr/bin/env python
-#################################################
 #
-# reset-config.py
-#  (c) A10 Networks -- MP
-#   v1 20140710
-#   v2 20140711 - added upgrade
-#   v3 20140712 - moved to aXAPI V2.1
-#   v4 20140713 - moved result to function
+# Copyright 2014, Mischa Peters <mpeters AT a10networks DOT com>, A10 Networks.
+# Version 1.0 - 20140710
+# Version 1.1 - 20140711 - added upgrade
+# Version 1.2 - 20140712 - moved to aXAPI V2.1
+# Version 1.3 - 20140713 - moved result to function
 #
-#################################################
-#
-# aXAPI script
 # Reset a training lab to default config
 #
 # Requiers:
@@ -18,10 +13,6 @@
 #   - aXAPI V2.1
 #   - ACOS 2.7.1-Px or higher
 #
-# Questions & comments welcome.
-#  mpeters AT a10networks DOT com
-#
-#################################################
 
 import json
 import urllib2
