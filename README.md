@@ -15,3 +15,6 @@ For a python API client, please look here: https://github.com/a10networks/acos-c
 * member-prio.py -- Use member priority to gracefully shutdown members via aXAPI
 * push-fixed-nat-table.py -- Get the Fixed-NAT table from ACOS
 * reset-config.py -- Reset the Lab config
+
+## Health Monitors
+* hm-vip-down-min-active.py - If service-group has less than min_active_member then it returns 0, marking VIP down.
