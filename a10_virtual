@@ -148,8 +148,7 @@ def main():
     global module
     module = AnsibleModule(
         argument_spec=dict(
-            host=dict(type='str',
-                      required=True),
+            host=dict(type='str', required=True),
             username=dict(type='str', aliases=['user', 'admin'],
                           required=True),
             password=dict(type='str', aliases=['pass', 'pwd'],
