@@ -17,8 +17,6 @@
 import json
 import urllib2
 import argparse
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
 
 
 parser = argparse.ArgumentParser(description="Script to change the status \
